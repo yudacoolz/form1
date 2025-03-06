@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Form Data Display</title>
+  </head>
+  <body>
+    <h1>Form Responses</h1>
+    <form id="dataForm">
+      <label for="nama">Nama:</label>
+      <input type="text" id="nama" name="nama" required />
+      <br />
+      <label for="pesan">Pesan:</label>
+      <textarea id="pesan" name="pesan" required></textarea>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+    <div id="responseMessage"></div>
+
+    <div id="responses"></div>
+
+    <script>
+      const form = document.getElementById("dataForm");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+
+        const nama = document.getElementById("nama").value;
+        const pesan = document.getElementById("pesan").value;
+        console.log("nama : ", nama + " pesan : " + pesan);
+
+        const webAppUrl =
+          "https://script.google.com/macros/s/AKfycbydu6CxSTPXHLO-Hurn066Uh_MrZ9dX0KEITfmANcYS5DwSCo55jsaSKWciOBfPP_5U/exec"; // Replace with your Web App URL
+
+        try {
+          const response = await fetch(webAppUrl, {
+            method: "POST",
+            body: JSON.stringify({ nama, pesan }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const result = await response.text();
+          document.getElementById("responseMessage").innerText =
+            "Data submitted successfully!";
+          console.log("result", result);
+        } catch (error) {
+          document.getElementById("responseMessage").innerText =
+            "Error submitting data.";
+          console.error("Error:", error);
+        }
+      });
+
+      //   async function fetchData() {
+      //     const webAppUrl =
+      //       "https://script.google.com/macros/s/AKfycbywRz8tCueqS0sd3UU-3R3ua2L929wDFwNXUDCZijEh8kMelGwnwv6lfyEXtbtNR9Xm/exec"; // Replace with your Web App URL
+      //     const response = await fetch(webAppUrl);
+      //     console.log("response : ", response);
+
+      //     const data = await response.json();
+      //     console.log("data : ", data);
+
+      //     const responsesDiv = document.getElementById("responses");
+      //     responsesDiv.innerHTML = data
+      //       .map((item) => `<p>Nama: ${item.nama}, Pesan: ${item.pesan}</p>`)
+      //       .join("");
+      //   }
+
+      //   fetchData(); // Fetch and display data on page load
+    </script>
+  </body>
+</html>
